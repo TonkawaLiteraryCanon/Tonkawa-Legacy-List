@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tonkawa Literary Canon — Reading Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ DESIGN TOKENS ============ */
+  :root{
+    --ink:#0a0a0a;
+    --panel:#161616;
+    --panel-2:#1f1f1f;
+    --line:#3d3d3d;
+    --brass:#e8600c;
+    --brass-dim:#b84a09;
+    --parchment:#f5f5f2;
+    --slate:#a8a8a8;
+    --sage:#e8600c;
+    --clay:#ff7a29;
+    --radius:2px;
+    --display:'Fraunces', serif;
+    --body:'Source Sans 3', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--parchment);
+    font-family:var(--body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  button{font-family:inherit;cursor:pointer;color:var(--parchment);}
+  :focus-visible{outline:2px solid var(--brass);outline-offset:3px;}
+
+  /* ============ HEADER ============ */
+  header.site{
+    position:sticky;top:0;z-index:20;
+    background:rgba(10,10,10,0.94);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+    padding:16px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:12px;cursor:pointer;}
+  .brand img.seal{width:38px;height:38px;object-fit:contain;flex:0 0 auto;}
+  .brand .wordmark{display:flex;flex-direction:column;}
+  .brand .mark{font-family:var(--mono);font-size:12px;color:var(--brass);letter-spacing:0.12em;}
+  .brand h1{font-family:var(--display);font-size:20px;font-weight:600;margin:0;letter-spacing:0.01em;color:var(--brass);}
+  nav.site{display:flex;gap:4px;flex-wrap:wrap;}
+  nav.site a{
+    font-family:var(--mono);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;
+    color:var(--slate);text-decoration:none;padding:8px 12px;border:1px solid transparent;border-radius:var(--radius);
+  }
+  nav.site a:hover, nav.site a.active{color:var(--parchment);border-color:var(--line);background:var(--panel);}
+
+  main{max-width:1100px;margin:0 auto;padding:32px 24px 80px;}
+
+  /* ============ HERO / HOME ============ */
+  .hero{padding:56px 0 40px;border-bottom:1px dashed var(--line);margin-bottom:40px;}
+  .hero .eyebrow{font-family:var(--mono);font-size:12px;color:var(--brass);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:14px;}
+  .hero h2{font-family:var(--display);font-size:clamp(32px,5vw,54px);line-height:1.08;font-weight:700;margin:0 0 18px;max-width:26ch;transition:opacity .35s ease;color:var(--parchment);}
+  .hero p{color:var(--slate);max-width:56ch;font-size:16px;margin:0 0 28px;}
+  .hero .cta-row{display:flex;gap:12px;flex-wrap:wrap;}
+  .hero .poster{margin-top:36px;text-align:center;}
+  .hero .poster img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:var(--radius);}
+
+  .btn{
+    font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
+    padding:12px 20px;border-radius:var(--radius);border:1px solid var(--brass);
+    background:transparent;color:var(--brass);text-decoration:none;display:inline-block;
+    transition:background .15s, color .15s;
+  }
+  .btn:hover{background:var(--brass);color:var(--parchment);}
+  .btn.solid{background:var(--brass);color:var(--parchment);}
+  .btn.solid:hover{background:var(--brass-dim);border-color:var(--brass-dim);}
+
+  /* ============ MARQUEE (signature element: due-date review cards) ============ */
+  .marquee-wrap{overflow:hidden;position:relative;margin:0 -24px 8px;padding:8px 0;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
+  .marquee-track{display:flex;gap:18px;width:max-content;animation:scroll 55s linear infinite;padding:0 24px;}
+  .marquee-wrap:hover .marquee-track{animation-play-state:paused;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media (prefers-reduced-motion: reduce){.marquee-track{animation:none;}}
+
+  .due-card{
+    flex:0 0 auto;width:280px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 18px 14px;position:relative;
+  }
+  .due-card::before{
+    content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+    width:12px;height:12px;border-radius:50%;background:var(--ink);border:1px solid var(--line);
+  }
+  .due-card .stamp{
+    display:inline-flex;align-items:center;gap:4px;border:2px solid var(--clay);color:var(--clay);
+    font-family:var(--mono);font-size:11px;letter-spacing:0.05em;padding:3px 8px;border-radius:3px;
+    transform:rotate(-3deg);margin-bottom:10px;
+  }
+  .due-card .book-title{font-family:var(--display);font-weight:600;font-size:15px;margin:0 0 4px;color:var(--parchment);}
+  .due-card .quote{color:var(--slate);font-size:13px;margin:0 0 10px;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .due-card .who{font-family:var(--mono);font-size:11px;color:var(--brass);}
+
+  /* ============ SECTION HEADERS ============ */
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:56px 0 20px;flex-wrap:wrap;}
+  .section-head h3{font-family:var(--display);font-size:24px;margin:0;color:var(--parchment);}
+  .section-head .tag{font-family:var(--mono);font-size:11px;color:var(--slate);letter-spacing:0.1em;text-transform:uppercase;}
+
+  /* ============ GRADE DRAWERS ============ */
+  .drawers{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;}
+  .drawer{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 14px;text-align:left;color:var(--parchment);text-decoration:none;
+    display:flex;flex-direction:column;gap:6px;transition:border-color .15s, transform .15s;
+  }
+  .drawer:hover{border-color:var(--brass);transform:translateY(-2px);}
+  .drawer .num{font-family:var(--mono);font-size:26px;color:var(--brass);}
+  .drawer .label{font-family:var(--mono);font-size:11px;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;}
+
+  /* ============ CATALOG CARD GRID (books) ============ */
+  .catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+  .catalog-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 18px;text-decoration:none;color:var(--parchment);position:relative;
+    display:flex;flex-direction:column;gap:8px;transition:border-color .15s, transform .15s;
+  }
+  .catalog-card:hover{border-color:var(--brass);transform:translateY(-2px);}
+  .catalog-card::before{
+    content:'';position:absolute;top:-6px;left:24px;width:12px;height:12px;border-radius:50%;
+    background:var(--ink);border:1px solid var(--line);
+  }
+  .catalog-card .call-no{font-family:var(--mono);font-size:11px;color:var(--brass-dim);}
+  .catalog-card .cover{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:var(--radius);border:1px solid var(--line);margin-bottom:2px;background:var(--panel-2);}
+  .catalog-card .cover-placeholder{width:100%;aspect-ratio:2/3;border-radius:var(--radius);border:1px dashed var(--line);margin-bottom:2px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--slate);text-align:center;padding:8px;}
+  .catalog-card .title{font-family:var(--display);font-weight:600;font-size:17px;line-height:1.25;color:var(--parchment);}
+  .catalog-card .author{font-family:var(--body);font-size:13px;color:var(--slate);}
+  .catalog-card .stars{font-family:var(--mono);font-size:13px;color:var(--brass);margin-top:auto;}
+
+  /* ============ BOOK DETAIL ============ */
+  .book-head{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;padding-bottom:28px;border-bottom:1px dashed var(--line);margin-bottom:32px;}
+  .book-head .cover{width:150px;flex:0 0 auto;border-radius:var(--radius);border:1px solid var(--line);}
+  .book-head .cover-placeholder{width:150px;aspect-ratio:2/3;flex:0 0 auto;border-radius:var(--radius);border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--slate);text-align:center;padding:8px;}
+  .book-head .info{flex:1 1 320px;}
+  .book-head .call-no{font-family:var(--mono);font-size:12px;color:var(--brass-dim);margin-bottom:8px;}
+  .book-head h2{font-family:var(--display);font-size:clamp(26px,4vw,38px);margin:0 0 6px;color:var(--parchment);}
+  .book-head .author{color:var(--slate);margin:0 0 18px;}
+  .blurb-box{background:var(--panel);border-left:3px solid var(--brass);border-radius:var(--radius);padding:16px 20px;margin:20px 0 28px;font-size:14px;color:var(--parchment);line-height:1.6;font-style:italic;}
+  .rating-stamp{
+    flex:0 0 auto;width:120px;height:120px;border:2px solid var(--brass);border-radius:50%;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-4deg);
+  }
+  .rating-stamp .big{font-family:var(--display);font-size:32px;color:var(--brass);line-height:1;}
+  .rating-stamp .small{font-family:var(--mono);font-size:10px;color:var(--brass-dim);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;}
+
+  .review-list{display:flex;flex-direction:column;gap:14px;}
+  .review-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;}
+  .review-card .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:10px;flex-wrap:wrap;}
+  .review-card .who{font-family:var(--mono);font-size:12px;color:var(--brass);}
+  .review-card .stars{font-family:var(--mono);font-size:12px;color:var(--slate);}
+  .review-card p{margin:0 0 6px;font-size:14px;color:var(--parchment);}
+  .review-card .label{font-family:var(--mono);font-size:10px;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;margin:10px 0 2px;}
+
+  /* ============ LEADERBOARD ============ */
+  .board{width:100%;border-collapse:collapse;}
+  .board th{text-align:left;font-family:var(--mono);font-size:11px;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;padding:10px 12px;border-bottom:1px solid var(--line);}
+  .board td{padding:12px;border-bottom:1px solid var(--line);font-size:14px;color:var(--parchment);}
+  .board tr:hover td{background:var(--panel);}
+  .rank{font-family:var(--mono);color:var(--brass);width:40px;}
+  .medal{font-size:16px;}
+
+  /* ============ MY SHELF ============ */
+  .lookup{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;}
+  .lookup input{
+    flex:1 1 260px;background:var(--panel);border:1px solid var(--line);color:var(--parchment);
+    padding:12px 14px;border-radius:var(--radius);font-family:var(--body);font-size:14px;
+  }
+  .lookup input:focus{border-color:var(--brass);outline:none;}
+  .shelf-grade{margin-bottom:28px;}
+  .shelf-grade h4{font-family:var(--mono);font-size:12px;color:var(--brass);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+  .shelf-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px;}
+  .shelf-row .check{width:18px;height:18px;border:1px solid var(--slate);border-radius:2px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:12px;}
+  .shelf-row.done .check{background:var(--sage);border-color:var(--sage);color:var(--parchment);}
+  .shelf-row.done .title{color:var(--parchment);}
+  .shelf-row:not(.done) .title{color:var(--slate);}
+  .shelf-summary{font-family:var(--mono);font-size:13px;color:var(--brass);margin-bottom:20px;}
+
+  .empty, .loading{color:var(--slate);font-size:14px;padding:40px 0;text-align:center;}
+  .back-link{display:inline-block;margin-bottom:24px;font-family:var(--mono);font-size:12px;color:var(--slate);text-decoration:none;}
+  .back-link:hover{color:var(--brass);}
+
+  footer{border-top:1px solid var(--line);padding:24px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--slate);}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="brand" onclick="location.hash='#/'">
+    <img class="seal" src="images/legacy-list-seal.png" alt="Tonkawa Literary Canon seal">
+    <div class="wordmark">
+      <span class="mark">TPS · LEGACY LIST READING CHALLENGE</span>
+      <h1>Tonkawa Literary Canon</h1>
+    </div>
+  </div>
+  <nav class="site">
+    <a href="#/" data-route="home">Home</a>
+    <a href="#/leaderboard" data-route="leaderboard">Leaderboard</a>
+    <a href="#/my-shelf" data-route="my-shelf">My Shelf</a>
+  </nav>
+</header>
+
+<main id="app">
+  <div class="loading">Loading the card catalog…</div>
+</main>
+
+<footer>Tonkawa Literary Canon — a reading challenge hub · data refreshes automatically as quizzes are completed</footer>
+
+<script>
+/* =====================================================
+   CONFIG — paste your deployed Apps Script Web App URL
+   (from Website_Backend.gs) below before publishing.
+   ===================================================== */
+const SITE_CONFIG = {
+  apiUrl: "https://script.google.com/macros/s/AKfycbwIW2Z5eMNlqG1JYgeeHTcEqRLAJik8EByshW-Z6AUXLDlC1pQm5e98i_4pFMEq8enp/exec"
+};
+
+let siteData = null;
+const GRADES = [6,7,8,9,10,11,12];
+
+const TAGLINES = [
+  "Great Books. Great Minds. Lasting Legacy.",
+  "Finish the List. Join the Legacy.",
+  "A Collection of Timeless Literature. A Challenge Worth Completing.",
+  "Because Great Readers Become Great Thinkers.",
+  "The Challenge Is Reading. The Reward Is Forever."
+];
+let taglineInterval = null;
+let taglineIndex = 0;
+
+/* =====================================================
+   BOOK_CONTENT — cover art + spoiler-free blurbs.
+   Add entries here as each grade's cover art comes in.
+   A book with no entry just falls back to a placeholder
+   card and no blurb box, so nothing breaks in the meantime.
+   ===================================================== */
+const BOOK_CONTENT = {
+  "Harry Potter and the Sorcerer's Stone": {
+    cover: "images/harry-potter.png",
+    blurb: "Harry Potter has never been anything but ordinary — until an owl delivers a letter that changes everything. Whisked away to Hogwarts School of Witchcraft and Wizardry, Harry discovers a world of magic, mystery, and an evil he narrowly escaped as a baby. With new friends at his side, he must navigate spells, Quidditch, and secrets hidden deep within the castle walls."
+  },
+  "Number the Stars": {
+    cover: "images/number-the-stars.png",
+    blurb: "Denmark, 1943. Ten-year-old Annemarie Johansen's life is turned upside down when the Nazis begin \u201crelocating\u201d Jewish citizens \u2014 including her best friend Ellen's family. As neighbors risk everything to protect one another, Annemarie discovers a courage she never knew she had."
+  },
+  "Holes": {
+    cover: "images/holes.png",
+    blurb: "Stanley Yelnats is sent to a brutal desert camp for a crime he didn't commit, where the punishment is digging holes \u2014 five feet deep, five feet wide \u2014 every single day. As Stanley uncovers the camp's buried secrets, he starts to wonder if his family's century-old \u201ccurse\u201d might finally be broken."
+  },
+  "Where the Red Fern Grows": {
+    cover: "images/red-fern-grows.png",
+    blurb: "Billy Colman wants nothing more than a pair of hunting hounds of his own. After two years of saving, he finally gets Old Dan and Little Ann \u2014 and together the three of them become an unstoppable coon-hunting team. A timeless story about loyalty, hard work, and the bond between a boy and his dogs."
+  },
+  "The Lion, the Witch, and the Wardrobe": {
+    cover: "images/lion-witch-wardrobe.png",
+    blurb: "Four siblings step through an old wardrobe and into the snowy, magical land of Narnia \u2014 a country frozen under the spell of the White Witch, where it's always winter and never Christmas. To save Narnia, they'll need the help of a legendary lion named Aslan."
+  },
+
+  "The Lightning Thief": {
+    cover: "images/lightning-thief.png",
+    blurb: "Percy Jackson has always felt like trouble finds him \u2014 but he never expected to be accused of stealing a weapon belonging to a Greek god. Suddenly thrust into a world of monsters, gods, and demigods like himself, Percy must go on a cross-country quest to clear his name before war breaks out on Mount Olympus."
+  },
+  "The Graveyard Book": {
+    cover: "images/graveyard-book.png",
+    blurb: "After his family is murdered, a toddler wanders into a graveyard and is raised by its ghostly residents, who name him Nobody \u201cBod\u201d Owens. As Bod grows up surrounded by the dead, he must learn to navigate both the graveyard's supernatural dangers and the very-much-alive threat still hunting him."
+  },
+  "A Wrinkle in Time": {
+    cover: "images/wrinkle-in-time.png",
+    blurb: "When Meg Murry's scientist father mysteriously disappears, Meg, her brother, and a new friend are swept into an interdimensional journey across the universe to find him. Guided by three otherworldly women, they must confront a growing darkness that threatens everything."
+  },
+  "House of the Scorpion": {
+    cover: "images/house-of-the-scorpion.png",
+    blurb: "Matt has always known he's different \u2014 he just doesn't know why, until he learns the truth: he is a clone, created to serve a powerful drug lord. Trapped between two worlds, Matt must decide what it really means to be human."
+  },
+  "The Hunger Games": {
+    cover: "images/hunger-games.png",
+    blurb: "In a country divided into twelve impoverished districts, sixteen-year-old Katniss Everdeen volunteers to take her younger sister's place in the Hunger Games \u2014 a televised fight to the death. Katniss will need every ounce of skill and cunning to survive an arena where only one competitor can come home."
+  },
+  "Esperanza Rising": {
+    cover: "images/esperanza-rising.png",
+    blurb: "Esperanza has grown up surrounded by wealth on her family's Mexican ranch \u2014 until tragedy forces her and her mother to flee to California, where they must adjust to a life of hard labor in migrant farm camps. A moving story about resilience, and rebuilding when everything is taken from you."
+  },
+
+  "The Outsiders": {
+    cover: "images/outsiders.png",
+    blurb: "Ponyboy Curtis knows the rules of his world: Greasers and Socs don't mix. But after a night that spirals violently out of control, Ponyboy is forced to see both sides of the rivalry \u2014 and himself \u2014 in a whole new light."
+  },
+  "Scythe": {
+    cover: "images/scythe.png",
+    blurb: "In a future where humanity has conquered death itself, the only way to control population is for trained Scythes to selectively end lives. When teenagers Citra and Rowan are chosen as apprentices to a scythe, they're forced into a competition that will change everything about who they are."
+  },
+  "Tress of the Emerald Sea": {
+    cover: "images/tress.png",
+    blurb: "Tress has never left her small island home, but when someone she loves is taken across a deadly sea of magical spores, she sets out on an adventure that will require every ounce of resourcefulness she has \u2014 and a crew of very unusual companions."
+  },
+  "The Call of the Wild": {
+    cover: "images/call-of-the-wild.png",
+    blurb: "Buck is a comfortable, domesticated dog until he's stolen from his California home and thrust into the brutal world of the Klondike Gold Rush as a sled dog. As Buck adapts to a harsher existence, something ancient begins to stir within him."
+  },
+  "The Giver": {
+    cover: "images/giver.png",
+    blurb: "In Jonas's community, there is no pain, no war, and no choice \u2014 everyone's life is planned for them, down to the smallest detail. When Jonas is selected for a mysterious and singular role, he begins to learn the truth about the \u201cperfect\u201d world he's always known."
+  },
+  "Every Falling Star": {
+    cover: "images/every-falling-star.png",
+    blurb: "Sungju Lee grew up believing in the promises of his country, North Korea \u2014 until his family fell from favor and he was left to survive alone on the streets. This is his true story of hardship, found family, and the long road to freedom."
+  },
+  "Until We Meet Again": {
+    cover: "images/until-we-meet-again.png",
+    blurb: "Two teenagers in love, torn apart by the horrors of the Holocaust, make a promise: to find each other again once the war ends. This true story follows their parallel fights to survive \u2014 and the vow that carried them through it."
+  },
+
+  "The Hobbit": {
+    cover: "images/hobbit.png",
+    blurb: "Bilbo Baggins is a homebody hobbit who prefers a quiet life \u2014 until a wizard and a company of dwarves show up on his doorstep with an invitation to adventure. Swept along on a quest to reclaim a stolen mountain kingdom, Bilbo will face trolls, giant spiders, and riddles in the dark before this journey is through."
+  },
+  "The Book Thief": {
+    cover: "images/book-thief.png",
+    blurb: "Death himself narrates the story of Liesel Meminger, a young girl in Nazi Germany who finds comfort in stealing books she isn't supposed to have. As war closes in around her small town, Liesel's love of words \u2014 and the family hiding a secret in their basement \u2014 will test what one girl can hold onto in the darkest of times."
+  },
+  "To Kill a Mockingbird": {
+    cover: "images/to-kill-a-mockingbird.png",
+    blurb: "Scout Finch is growing up in a small Alabama town where everyone seems to know everyone's business \u2014 including her father's decision to defend a Black man falsely accused of a crime. Through Scout's eyes, a summer of childhood games and neighborhood mysteries becomes a lesson in courage, prejudice, and what it means to do the right thing."
+  },
+  "Ender's Game": {
+    cover: "images/enders-game.png",
+    blurb: "Ender Wiggin is a gifted child recruited into a brutal training program meant to turn kids into the commanders humanity needs to survive an alien invasion. As Ender rises through the ranks of Battle School, he'll discover just how far the people in charge are willing to go \u2014 and what it costs him."
+  },
+  "Lord of the Flies": {
+    cover: "images/lord-of-the-flies.png",
+    blurb: "A group of boys, stranded on a deserted island with no adults in sight, start out determined to build a fair and orderly society. But as fear, power, and human nature take hold, their fragile rules begin to crack \u2014 with consequences none of them expected."
+  },
+  "Watership Down": {
+    cover: "images/watership-down.png",
+    blurb: "When a young rabbit's warning of impending disaster is ignored, a small band of rabbits sets out to find a new home \u2014 facing predators, rival warrens, and the challenge of building a society of their own along the way. An epic adventure that just happens to be about rabbits."
+  },
+  "The Boys in the Boat": {
+    cover: "images/boys-in-the-boat.png",
+    blurb: "In the depths of the Great Depression, nine working-class boys from the University of Washington row their way toward an unlikely shot at Olympic gold \u2014 and straight into Hitler's Berlin. A true story of grit, teamwork, and beating impossible odds."
+  },
+
+  "Pride and Prejudice": {
+    cover: "images/pride-and-prejudice.png",
+    blurb: "Elizabeth Bennet has sharp wit, strong opinions, and little patience for the proud, wealthy Mr. Darcy. As their paths keep crossing at dances, dinners, and family scandals, both will have to confront their own pride \u2014 and prejudice \u2014 before they can see each other clearly."
+  },
+  "Fahrenheit 451": {
+    cover: "images/fahrenheit-451.png",
+    blurb: "In a future where firemen burn books instead of putting out fires, Guy Montag has never questioned his job \u2014 until a curious young neighbor and a hidden stash of books make him start to wonder what, exactly, society is so afraid of people reading."
+  },
+  "The Boy in the Striped Pajamas": {
+    cover: "images/boy-in-striped-pajamas.png",
+    blurb: "Bruno is just a curious eight-year-old exploring his family's new home near a strange \u201cfarm\u201d surrounded by a fence \u2014 until he meets a boy his own age on the other side of it. Their unlikely friendship unfolds against a backdrop Bruno doesn't fully understand, but readers will."
+  },
+  "Night": {
+    cover: "images/night.png",
+    blurb: "Elie Wiesel was a teenager when he and his family were taken from their home and sent to Auschwitz. This memoir is his firsthand account of survival, loss, and the struggle to hold on to faith and humanity in the face of unimaginable cruelty."
+  },
+  "Anthem": {
+    cover: "images/anthem.png",
+    blurb: "In a rigidly controlled future society where the word \u201cI\u201d no longer exists, a young man known only as Equality 7-2521 begins to question everything he's been taught \u2014 and discovers a spark of curiosity that could cost him everything."
+  },
+  "The Adventures of Huckleberry Finn": {
+    cover: "images/huckleberry-finn.png",
+    blurb: "Huck Finn fakes his own death to escape his abusive father and winds up rafting down the Mississippi River alongside Jim, a man escaping slavery. Their journey becomes a coming-of-age story about friendship, freedom, and questioning what society has taught you to believe."
+  },
+  "The Wager": {
+    cover: "images/wager.png",
+    blurb: "In 1741, a British warship called the Wager wrecked off the coast of Patagonia, stranding its crew in one of the most unforgiving places on Earth. What followed was a desperate fight for survival \u2014 and, when the few survivors finally made it home, very different stories about what really happened."
+  },
+
+  "Treasure Island": {
+    cover: "images/treasure-island.png",
+    blurb: "Young Jim Hawkins stumbles into a pirate treasure map, and before he knows it, he's aboard a ship bound for a remote island \u2014 with a one-legged sea cook named Long John Silver who isn't quite what he seems. Mutiny, buried gold, and a crew of dangerous men await."
+  },
+  "The Fellowship of the Ring": {
+    cover: "images/lord-of-the-rings.png",
+    blurb: "A simple ring turns out to be the most dangerous object in the world, and the fate of everything now rests on a hobbit named Frodo. As a fellowship of unlikely companions sets out to destroy it, they'll face ancient evils, treacherous mountains, and a darkness that's already hunting them."
+  },
+  "The Two Towers": {
+    cover: "images/lord-of-the-rings.png",
+    blurb: "Split up and scattered across Middle-earth, Frodo and his companions each face their own trials \u2014 from a talking forest to a mysterious guide who isn't entirely trustworthy. Meanwhile, war is coming to the kingdoms of Men, and time is running out."
+  },
+  "The Return of the King": {
+    cover: "images/lord-of-the-rings.png",
+    blurb: "The final battle for Middle-earth begins, as armies clash and Frodo's quest to destroy the Ring reaches its most dangerous stretch yet. Everything the fellowship has fought for comes down to this."
+  },
+  "Frankenstein": {
+    cover: "images/frankenstein.png",
+    blurb: "Victor Frankenstein achieves the impossible \u2014 bringing life to something built from the dead \u2014 only to recoil in horror at what he's created. What follows is a haunting story about ambition, responsibility, and the consequences of playing god."
+  },
+  "Animal Farm": {
+    cover: "images/animal-farm.png",
+    blurb: "The animals of Manor Farm rise up and drive out their human farmer, dreaming of a future where all animals are equal. But as new leaders emerge, that dream starts to look uncomfortably familiar."
+  },
+  "The Bees": {
+    cover: "images/bees.png",
+    blurb: "Flora 717 is born into the lowest class of her hive, expected to stay silent and obey \u2014 but she's not like the other bees. Her unusual abilities pull her into a rigid, secretive society where breaking the rules can mean death."
+  },
+  "All the Light We Cannot See": {
+    cover: "images/all-the-light-we-cannot-see.png",
+    blurb: "A blind French girl and a German orphan boy, each swept up in the chaos of World War II, find their paths slowly converging in the occupied coastal city of Saint-Malo. A story about the unseen connections that persist even in humanity's darkest hour."
+  },
+  "Unbroken": {
+    cover: "images/unbroken.png",
+    blurb: "Louie Zamperini was an Olympic runner before he was a World War II airman \u2014 and his plane crash in the Pacific was only the beginning of an extraordinary fight for survival. This is a true story of resilience that goes far beyond what most people could imagine enduring."
+  },
+
+  "A Tale of Two Cities": {
+    cover: "images/tale-of-two-cities.png",
+    blurb: "As revolution erupts in France, the lives of an English family and a group of Parisians become entangled in ways none of them could have predicted. Sacrifice, injustice, and the razor's edge between order and chaos define this sweeping story of two cities on the brink."
+  },
+  "The Count of Monte Cristo": {
+    cover: "images/count-of-monte-cristo.png",
+    blurb: "Betrayed by those closest to him and thrown into prison for a crime he didn't commit, Edmond Dant\u00e8s escapes with nothing but a plan \u2014 and the means to become someone entirely new. What follows is one of literature's greatest stories of transformation and reckoning."
+  },
+  "Jane Eyre": {
+    cover: "images/jane-eyre.png",
+    blurb: "Orphaned and unwanted, Jane Eyre grows up determined to have a life of her own choosing. When she takes a position as a governess at a mysterious estate, she finds far more than she bargained for \u2014 including secrets the house seems desperate to keep hidden."
+  },
+  "Never Let Me Go": {
+    cover: "images/never-let-me-go.png",
+    blurb: "Kathy, Ruth, and Tommy grew up together at an idyllic English boarding school, close as family. But as they grow older, they begin to understand that their futures were never really their own to choose."
+  },
+  "The Road": {
+    cover: "images/the-road.png",
+    blurb: "A father and son walk south through a devastated, ash-covered world, carrying nothing but a cart of supplies and the hope of finding safety. Amid constant danger, their bond becomes the one thing that still makes sense."
+  },
+  "Demon Copperhead": {
+    cover: "images/demon-copperhead.png",
+    blurb: "Born to a teenage mother in the mountains of Appalachia, Demon narrates his own coming-of-age with sharp wit and hard-won honesty \u2014 through foster homes, addiction, and a system that keeps failing him. A modern story about resilience in a place too often overlooked."
+  },
+  "Devil in the White City": {
+    cover: "images/devil-in-the-white-city.png",
+    blurb: "As Chicago races to build the dazzling 1893 World's Fair, a charming con man is quietly building something else nearby \u2014 a house designed for murder. Two true stories, one glittering and one gruesome, unfold side by side in the same city."
+  }
+};
+
+function stars(n){
+  if (n === null || n === undefined) return '— no ratings yet —';
+  const full = Math.round(n);
+  return '★'.repeat(full) + '☆'.repeat(5-full) + '  (' + n.toFixed(1) + ')';
+}
+function escapeHtml(s){
+  return String(s || '').replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function slug(title){ return encodeURIComponent(title); }
+function unslug(s){ return decodeURIComponent(s); }
+
+async function loadData(){
+  const app = document.getElementById('app');
+  if (SITE_CONFIG.apiUrl.indexOf('PASTE_YOUR') === 0){
+    app.innerHTML = "<div class=\"empty\">The site isn't connected to its data source yet.<br>Paste your Apps Script Web App URL into SITE_CONFIG.apiUrl in this file.</div>";
+    return;
+  }
+  try {
+    const res = await fetch(SITE_CONFIG.apiUrl);
+    siteData = await res.json();
+    router();
+  } catch (err) {
+    app.innerHTML = "<div class=\"empty\">Couldn't load reading challenge data. Check that the Apps Script Web App is deployed with \"Anyone\" access, and that the URL in SITE_CONFIG is correct.</div>";
+  }
+}
+
+/* ============ ROUTER ============ */
+window.addEventListener('hashchange', router);
+window.addEventListener('DOMContentLoaded', loadData);
+
+function router(){
+  if (!siteData) return;
+  if (taglineInterval) { clearInterval(taglineInterval); taglineInterval = null; }
+  const hash = location.hash || '#/';
+  document.querySelectorAll('nav.site a').forEach(a => a.classList.remove('active'));
+
+  if (hash === '#/' || hash === '') { renderHome(); document.querySelector('[data-route="home"]').classList.add('active'); }
+  else if (hash.startsWith('#/grade/')) renderGrade(Number(hash.split('/')[2]));
+  else if (hash.startsWith('#/book/')) renderBook(unslug(hash.split('/')[2]));
+  else if (hash === '#/leaderboard') { renderLeaderboard(); document.querySelector('[data-route="leaderboard"]').classList.add('active'); }
+  else if (hash === '#/my-shelf') { renderMyShelf(); document.querySelector('[data-route="my-shelf"]').classList.add('active'); }
+  else renderHome();
+
+  window.scrollTo(0,0);
+}
+
+/* ============ HOME ============ */
+function renderHome(){
+  const app = document.getElementById('app');
+  const allReviews = [];
+  siteData.books.forEach(b => b.reviews.forEach(r => allReviews.push(Object.assign({bookTitle:b.title}, r))));
+  // shuffle-ish: interleave by taking a spread across books rather than in book order
+  const shuffled = allReviews.sort(() => Math.random() - 0.5).slice(0, 24);
+  const marqueeItems = shuffled.length ? shuffled.concat(shuffled) : []; // doubled for seamless loop
+
+  app.innerHTML = `
+    <section class="hero">
+      <div class="eyebrow">A student-powered reading log</div>
+      <h2 id="tagline">${TAGLINES[taglineIndex]}</h2>
+      <p>Reviews, star ratings, and reading progress from the Tonkawa Literary Canon Challenge — browse by grade, take a quiz once you've finished a book, and see where you land on the leaderboard.</p>
+      <div class="cta-row">
+        <a class="btn solid" href="#/leaderboard">View Leaderboard</a>
+        <a class="btn" href="#/my-shelf">Check My Shelf</a>
+      </div>
+      <div class="poster">
+        <img src="images/legacy-list-poster.png" alt="Tonkawa Literary Canon: Legacy List — the full poster of every book in the reading challenge">
+      </div>
+    </section>
+
+    ${marqueeItems.length ? `
+    <div class="marquee-wrap">
+      <div class="marquee-track">
+        ${marqueeItems.map(r => `
+          <div class="due-card">
+            <div class="stamp">${'★'.repeat(Math.round(r.rating))}${'☆'.repeat(5-Math.round(r.rating))}</div>
+            <p class="book-title">${escapeHtml(r.bookTitle)}</p>
+            <p class="quote">${escapeHtml(r.review) || 'No written review.'}</p>
+            <div class="who">— ${escapeHtml(r.firstName)}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>` : ''}
+
+    <div class="section-head">
+      <h3>Browse by grade</h3>
+      <span class="tag">${siteData.totalBooks} books · 7 shelves</span>
+    </div>
+    <div class="drawers">
+      ${GRADES.map(g => `
+        <a class="drawer" href="#/grade/${g}">
+          <span class="num">${String(g).padStart(2,'0')}</span>
+          <span class="label">Grade ${g}</span>
+        </a>
+      `).join('')}
+    </div>
+  `;
+
+  taglineInterval = setInterval(() => {
+    taglineIndex = (taglineIndex + 1) % TAGLINES.length;
+    const el = document.getElementById('tagline');
+    if (!el) { clearInterval(taglineInterval); taglineInterval = null; return; }
+    el.style.opacity = 0;
+    setTimeout(() => {
+      const el2 = document.getElementById('tagline');
+      if (!el2) return;
+      el2.textContent = TAGLINES[taglineIndex];
+      el2.style.opacity = 1;
+    }, 350);
+  }, 10000);
+}
+
+/* ============ GRADE VIEW ============ */
+function renderGrade(grade){
+  const app = document.getElementById('app');
+  const books = siteData.books.filter(b => b.grade === grade);
+  app.innerHTML = `
+    <a class="back-link" href="#/">&larr; Back to shelves</a>
+    <div class="section-head">
+      <h3>Grade ${grade}</h3>
+      <span class="tag">${books.length} books</span>
+    </div>
+    <div class="catalog-grid">
+      ${books.map(b => {
+        const content = BOOK_CONTENT[b.title];
+        const coverHtml = content
+          ? `<img class="cover" src="${content.cover}" alt="${escapeHtml(b.title)} cover" loading="lazy">`
+          : `<div class="cover-placeholder">Cover coming soon</div>`;
+        return `
+        <a class="catalog-card" href="#/book/${slug(b.title)}">
+          ${coverHtml}
+          <span class="call-no">GR ${grade} · ${escapeHtml(b.author).toUpperCase()}</span>
+          <span class="title">${escapeHtml(b.title)}</span>
+          <span class="author">by ${escapeHtml(b.author)}</span>
+          <span class="stars">${stars(b.avgRating)}</span>
+        </a>
+      `;}).join('')}
+    </div>
+  `;
+}
+
+/* ============ BOOK VIEW ============ */
+function renderBook(title){
+  const app = document.getElementById('app');
+  const book = siteData.books.find(b => b.title === title);
+  if (!book){ app.innerHTML = '<div class="empty">Book not found.</div>'; return; }
+  const content = BOOK_CONTENT[book.title];
+  const coverHtml = content
+    ? `<img class="cover" src="${content.cover}" alt="${escapeHtml(book.title)} cover">`
+    : `<div class="cover-placeholder">Cover coming soon</div>`;
+
+  app.innerHTML = `
+    <a class="back-link" href="#/grade/${book.grade}">&larr; Back to Grade ${book.grade}</a>
+    <div class="book-head">
+      ${coverHtml}
+      <div class="info">
+        <div class="call-no">GRADE ${book.grade} · TONKAWA LITERARY CANON</div>
+        <h2>${escapeHtml(book.title)}</h2>
+        <p class="author">by ${escapeHtml(book.author)}</p>
+        ${book.formUrl
+          ? `<a class="btn solid" href="${book.formUrl}" target="_blank" rel="noopener">Take the Quiz</a>`
+          : `<span class="tag">Quiz link not available yet</span>`}
+      </div>
+      <div class="rating-stamp">
+        <span class="big">${book.avgRating !== null ? book.avgRating.toFixed(1) : '—'}</span>
+        <span class="small">${book.ratingCount} rating${book.ratingCount === 1 ? '' : 's'}</span>
+      </div>
+    </div>
+
+    ${content ? `<div class="blurb-box">${escapeHtml(content.blurb)}</div>` : ''}
+
+    <div class="section-head"><h3>Reader Reviews</h3></div>
+    <div class="review-list">
+      ${book.reviews.length ? book.reviews.map(r => `
+        <div class="review-card">
+          <div class="top">
+            <span class="who">${escapeHtml(r.firstName)}</span>
+            <span class="stars">${'★'.repeat(Math.round(r.rating))}${'☆'.repeat(5-Math.round(r.rating))}</span>
+          </div>
+          ${r.review ? `<p>${escapeHtml(r.review)}</p>` : ''}
+          ${r.classicReason ? `<div class="label">Why it's a classic</div><p>${escapeHtml(r.classicReason)}</p>` : ''}
+          ${r.recommend ? `<div class="label">Would recommend to</div><p>${escapeHtml(r.recommend)}</p>` : ''}
+        </div>
+      `).join('') : '<div class="empty">No reviews yet — be the first to take the quiz!</div>'}
+    </div>
+  `;
+}
+
+/* ============ LEADERBOARD ============ */
+function renderLeaderboard(){
+  const app = document.getElementById('app');
+  const students = siteData.students.slice(0, 50);
+  const medals = ['🥇','🥈','🥉'];
+  app.innerHTML = `
+    <div class="section-head">
+      <h3>Top Readers</h3>
+      <span class="tag">Ranked by books completed</span>
+    </div>
+    ${students.length ? `
+    <table class="board">
+      <thead><tr><th>Rank</th><th>Reader</th><th>Books Completed</th></tr></thead>
+      <tbody>
+        ${students.map((s,i) => `
+          <tr>
+            <td class="rank">${i < 3 ? `<span class="medal">${medals[i]}</span>` : '#' + (i+1)}</td>
+            <td>${escapeHtml(s.name.split(/\s+/)[0])} ${escapeHtml((s.name.split(/\s+/)[1]||'').charAt(0))}${s.name.split(/\s+/)[1] ? '.' : ''}</td>
+            <td>${s.completedCount} / ${siteData.totalBooks}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>` : '<div class="empty">No completions logged yet.</div>'}
+  `;
+}
+
+/* ============ MY SHELF ============ */
+function renderMyShelf(){
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="section-head"><h3>My Shelf</h3></div>
+    <div class="lookup">
+      <input id="shelf-input" type="text" placeholder="Enter your name or school email exactly as you did on the quiz…">
+      <button class="btn solid" onclick="lookupShelf()">Find My Shelf</button>
+    </div>
+    <div id="shelf-results"><div class="empty">Enter your name or email above to see your progress.</div></div>
+  `;
+  document.getElementById('shelf-input').addEventListener('keydown', e => { if (e.key === 'Enter') lookupShelf(); });
+}
+
+async function sha256Hex(str){
+  const enc = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function lookupShelf(){
+  const q = document.getElementById('shelf-input').value.trim().toLowerCase();
+  const results = document.getElementById('shelf-results');
+  if (!q){ results.innerHTML = '<div class="empty">Type your name or email first.</div>'; return; }
+
+  const qHash = await sha256Hex(q);
+  const student = siteData.students.find(s =>
+    s.emailHash === qHash || s.name.toLowerCase() === q || s.name.toLowerCase().split(/\s+/)[0] === q
+  );
+
+  if (!student){
+    results.innerHTML = '<div class="empty">No completed quizzes found under that name/email yet. Double-check spelling, or take a quiz first!</div>';
+    return;
+  }
+
+  const completedSet = new Set(student.completedTitles);
+  let html = `<div class="shelf-summary">${escapeHtml(student.name)} has completed ${student.completedCount} of ${siteData.totalBooks} books</div>`;
+
+  GRADES.forEach(g => {
+    const books = siteData.books.filter(b => b.grade === g);
+    html += `<div class="shelf-grade"><h4>Grade ${g}</h4>`;
+    books.forEach(b => {
+      const done = completedSet.has(b.title);
+      html += `<div class="shelf-row ${done ? 'done' : ''}">
+        <span class="check">${done ? '✓' : ''}</span>
+        <span class="title">${escapeHtml(b.title)}</span>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  results.innerHTML = html;
+}
+</script>
+</body>
+</html>
