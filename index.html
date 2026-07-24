@@ -228,18 +228,18 @@
    (from Website_Backend.gs) below before publishing.
    ===================================================== */
 const SITE_CONFIG = {
-  apiUrl: "https://script.google.com/macros/s/AKfycbwIW2Z5eMNlqG1JYgeeHTcEqRLAJik8EByshW-Z6AUXLDlC1pQm5e98i_4pFMEq8enp/exec"
+  apiUrl: "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"
 };
 
 let siteData = null;
 const GRADES = [6,7,8,9,10,11,12];
 
 const TAGLINES = [
-  "Great Books. Great Minds. Lasting Legacy.",
-  "Finish the List. Join the Legacy.",
-  "A Collection of Timeless Literature. A Challenge Worth Completing.",
-  "Because Great Readers Become Great Thinkers.",
-  "The Challenge Is Reading. The Reward Is Forever."
+  "Great Books.<br>Great Minds.<br>Lasting Legacy.",
+  "Finish the List.<br>Join the Legacy.",
+  "A Collection of Timeless Literature.<br>A Challenge Worth Completing.",
+  "Because Great Readers<br>Become Great Thinkers.",
+  "The Challenge Is Reading.<br>The Reward Is Forever."
 ];
 let taglineInterval = null;
 let taglineIndex = 0;
@@ -558,7 +558,7 @@ function renderHome(){
     setTimeout(() => {
       const el2 = document.getElementById('tagline');
       if (!el2) return;
-      el2.textContent = TAGLINES[taglineIndex];
+      el2.innerHTML = TAGLINES[taglineIndex];
       el2.style.opacity = 1;
     }, 350);
   }, 10000);
