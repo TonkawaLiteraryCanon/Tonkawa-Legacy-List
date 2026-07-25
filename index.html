@@ -64,13 +64,33 @@
   main{max-width:1100px;margin:0 auto;padding:32px 24px 80px;}
 
   /* ============ HERO / HOME ============ */
-  .hero{padding:56px 0 40px;border-bottom:1px dashed var(--line);margin-bottom:40px;}
-  .hero .eyebrow{font-family:var(--mono);font-size:12px;color:var(--brass);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:14px;}
-  .hero h2{font-family:var(--display);font-size:clamp(32px,5vw,54px);line-height:1.08;font-weight:700;margin:0 0 18px;max-width:26ch;transition:opacity .35s ease;color:var(--parchment);}
-  .hero p{color:var(--slate);max-width:56ch;font-size:16px;margin:0 0 28px;}
-  .hero .cta-row{display:flex;gap:12px;flex-wrap:wrap;}
-  .hero .poster{margin-top:36px;text-align:center;}
-  .hero .poster img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:var(--radius);}
+  .hero{position:relative;overflow:hidden;border-bottom:1px dashed var(--line);margin-bottom:40px;min-height:520px;}
+  .hero-tiles{position:absolute;inset:0;}
+  .hero-tiles .tile{
+    position:absolute;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.15);
+    box-shadow:0 8px 20px rgba(0,0,0,0.45);opacity:0.5;
+    animation:tileFloat 9s ease-in-out infinite;
+  }
+  @keyframes tileFloat{
+    0%,100%{transform:translateY(0) rotate(var(--rot));}
+    50%{transform:translateY(-10px) rotate(var(--rot));}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero-tiles .tile{animation:none;transform:rotate(var(--rot));}
+  }
+  .hero-overlay{
+    position:absolute;inset:0;
+    background:radial-gradient(ellipse at center, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.88) 62%, rgba(10,10,10,0.97) 100%);
+  }
+  .hero-content{
+    position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;
+    padding:64px 24px;
+  }
+  .hero-content .seal{width:110px;height:110px;object-fit:contain;opacity:0.95;margin-bottom:2px;}
+  .hero-content .eyebrow{font-family:var(--mono);font-size:12px;color:var(--brass);letter-spacing:0.16em;text-transform:uppercase;}
+  .hero-content h2{font-family:var(--display);font-size:clamp(32px,5vw,54px);line-height:1.08;font-weight:700;margin:0;max-width:26ch;transition:opacity .35s ease;color:var(--parchment);}
+  .hero-content p{color:var(--slate);max-width:56ch;font-size:16px;margin:0;}
+  .hero-content .cta-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
 
   .btn{
     font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
@@ -510,15 +530,34 @@ function renderHome(){
 
   app.innerHTML = `
     <section class="hero">
-      <div class="eyebrow">A student-powered reading log</div>
-      <h2 id="tagline">${TAGLINES[taglineIndex]}</h2>
-      <p>Reviews, star ratings, and reading progress from the Tonkawa Literary Canon Challenge — browse by grade, take a quiz once you've finished a book, and see where you land on the leaderboard.</p>
-      <div class="cta-row">
-        <a class="btn solid" href="#/leaderboard">View Leaderboard</a>
-        <a class="btn" href="#/my-shelf">Check My Shelf</a>
+      <div class="hero-tiles">
+        <img class="tile" src="images/harry-potter.png" alt="" style="top:4%;left:3%;width:110px;--rot:-10deg;transform:rotate(-10deg);">
+        <img class="tile" src="images/hunger-games.png" alt="" style="top:6%;left:20%;width:90px;--rot:8deg;transform:rotate(8deg);">
+        <img class="tile" src="images/scythe.png" alt="" style="top:3%;left:45%;width:85px;--rot:-5deg;transform:rotate(-5deg);">
+        <img class="tile" src="images/book-thief.png" alt="" style="top:5%;left:68%;width:95px;--rot:9deg;transform:rotate(9deg);">
+        <img class="tile" src="images/fahrenheit-451.png" alt="" style="top:7%;left:88%;width:105px;--rot:-9deg;transform:rotate(-9deg);">
+        <img class="tile" src="images/frankenstein.png" alt="" style="top:28%;left:5%;width:100px;--rot:12deg;transform:rotate(12deg);">
+        <img class="tile" src="images/the-road.png" alt="" style="top:30%;left:90%;width:100px;--rot:-12deg;transform:rotate(-12deg);">
+        <img class="tile" src="images/treasure-island.png" alt="" style="top:50%;left:2%;width:95px;--rot:-8deg;transform:rotate(-8deg);">
+        <img class="tile" src="images/hobbit.png" alt="" style="top:52%;left:92%;width:100px;--rot:10deg;transform:rotate(10deg);">
+        <img class="tile" src="images/lord-of-the-rings.png" alt="" style="top:70%;left:6%;width:105px;--rot:9deg;transform:rotate(9deg);">
+        <img class="tile" src="images/animal-farm.png" alt="" style="top:72%;left:88%;width:100px;--rot:-11deg;transform:rotate(-11deg);">
+        <img class="tile" src="images/watership-down.png" alt="" style="top:88%;left:15%;width:90px;--rot:-7deg;transform:rotate(-7deg);">
+        <img class="tile" src="images/wager.png" alt="" style="top:90%;left:38%;width:85px;--rot:6deg;transform:rotate(6deg);">
+        <img class="tile" src="images/jane-eyre.png" alt="" style="top:88%;left:60%;width:90px;--rot:-6deg;transform:rotate(-6deg);">
+        <img class="tile" src="images/count-of-monte-cristo.png" alt="" style="top:90%;left:80%;width:95px;--rot:8deg;transform:rotate(8deg);">
+        <img class="tile" src="images/unbroken.png" alt="" style="top:20%;left:35%;width:80px;--rot:-14deg;transform:rotate(-14deg);">
       </div>
-      <div class="poster">
-        <img src="images/legacy-list-poster.png" alt="Tonkawa Literary Canon: Legacy List — the full poster of every book in the reading challenge">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <img class="seal" src="images/legacy-list-seal.png" alt="Tonkawa Literary Canon seal">
+        <div class="eyebrow">A student-powered reading log</div>
+        <h2 id="tagline">${TAGLINES[taglineIndex]}</h2>
+        <p>Reviews, star ratings, and reading progress from the Tonkawa Literary Canon Challenge — browse by grade, take a quiz once you've finished a book, and see where you land on the leaderboard.</p>
+        <div class="cta-row">
+          <a class="btn solid" href="#/leaderboard">View Leaderboard</a>
+          <a class="btn" href="#/my-shelf">Check My Shelf</a>
+        </div>
       </div>
     </section>
 
