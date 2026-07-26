@@ -84,7 +84,7 @@
     background:rgba(10,10,10,0.9);border:1px solid var(--line);border-radius:8px;
     padding:40px 36px;max-width:640px;margin:0 24px;
   }
-  .hero-content .seal{width:100px;height:100px;object-fit:contain;opacity:0.95;margin-bottom:2px;}
+  .hero-content .seal{width:160px;height:160px;object-fit:contain;opacity:0.95;margin-bottom:2px;}
   .hero-content .eyebrow{font-family:var(--mono);font-size:12px;color:var(--brass);letter-spacing:0.16em;text-transform:uppercase;}
   .hero-content h2{font-family:var(--display);font-size:clamp(28px,4.5vw,46px);line-height:1.08;font-weight:700;margin:0;max-width:26ch;transition:opacity .35s ease;color:var(--parchment);}
   .hero-content p{color:var(--slate);max-width:52ch;font-size:15px;margin:0;}
@@ -111,12 +111,16 @@
 
   .due-card{
     flex:0 0 auto;width:280px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-    padding:18px 18px 14px;position:relative;
+    padding:18px 18px 14px;position:relative;display:flex;gap:12px;
   }
   .due-card::before{
     content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);
     width:12px;height:12px;border-radius:50%;background:var(--ink);border:1px solid var(--line);
   }
+  .due-card .cover{
+    flex:0 0 auto;width:56px;height:84px;object-fit:cover;border-radius:2px;border:1px solid var(--line);
+  }
+  .due-card .content{flex:1;min-width:0;}
   .due-card .stamp{
     display:inline-flex;align-items:center;gap:4px;border:2px solid var(--clay);color:var(--clay);
     font-family:var(--mono);font-size:11px;letter-spacing:0.05em;padding:3px 8px;border-radius:3px;
@@ -248,7 +252,7 @@
    (from Website_Backend.gs) below before publishing.
    ===================================================== */
 const SITE_CONFIG = {
-  apiUrl: "https://script.google.com/macros/s/AKfycbwIW2Z5eMNlqG1JYgeeHTcEqRLAJik8EByshW-Z6AUXLDlC1pQm5e98i_4pFMEq8enp/exec"
+  apiUrl: "https://script.google.com/macros/s/AKfycbywLQzlfqs7UdAPNTRsENqSWKGgA9jKmbewRrn2DxJv6TU5iFBKG6KjRSzkuGFr45vj/exec"
 };
 
 let siteData = null;
@@ -560,7 +564,6 @@ function renderHome(){
         <img class="seal" src="images/legacy-list-seal.png" alt="Tonkawa Literary Canon seal">
         <div class="eyebrow">A student-powered reading log</div>
         <h2 id="tagline">${TAGLINES[taglineIndex]}</h2>
-        <p>Reviews, star ratings, and reading progress from the Tonkawa Literary Canon Challenge — browse by grade, take a quiz once you've finished a book, and see where you land on the leaderboard.</p>
         <div class="cta-row">
           <a class="btn solid" href="#/leaderboard">View Leaderboard</a>
           <a class="btn" href="#/my-shelf">Check My Shelf</a>
@@ -590,10 +593,13 @@ function renderHome(){
       <div class="marquee-track">
         ${marqueeItems.map(r => `
           <div class="due-card">
-            <div class="stamp">${'★'.repeat(Math.round(r.rating))}${'☆'.repeat(5-Math.round(r.rating))}</div>
-            <p class="book-title">${escapeHtml(r.bookTitle)}</p>
-            <p class="quote">${escapeHtml(r.review) || 'No written review.'}</p>
-            <div class="who">— ${escapeHtml(r.firstName)}</div>
+            <img class="cover" src="${(BOOK_CONTENT[r.bookTitle] && BOOK_CONTENT[r.bookTitle].cover) || 'images/legacy-list-seal.png'}" alt="" loading="lazy">
+            <div class="content">
+              <div class="stamp">${'★'.repeat(Math.round(r.rating))}${'☆'.repeat(5-Math.round(r.rating))}</div>
+              <p class="book-title">${escapeHtml(r.bookTitle)}</p>
+              <p class="quote">${escapeHtml(r.review) || 'No written review.'}</p>
+              <div class="who">— ${escapeHtml(r.firstName)}</div>
+            </div>
           </div>
         `).join('')}
       </div>
