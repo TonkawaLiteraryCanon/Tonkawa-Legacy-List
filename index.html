@@ -112,7 +112,9 @@
   .due-card{
     flex:0 0 auto;width:280px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
     padding:18px 18px 14px;position:relative;display:flex;gap:12px;
+    text-decoration:none;color:inherit;transition:border-color .15s ease,transform .15s ease;
   }
+  .due-card:hover{border-color:var(--brass);transform:translateY(-2px);}
   .due-card::before{
     content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);
     width:12px;height:12px;border-radius:50%;background:var(--ink);border:1px solid var(--line);
@@ -174,7 +176,8 @@
   .book-head .call-no{font-family:var(--mono);font-size:12px;color:var(--brass-dim);margin-bottom:8px;}
   .book-head h2{font-family:var(--display);font-size:clamp(26px,4vw,38px);margin:0 0 6px;color:var(--parchment);}
   .book-head .author{color:var(--slate);margin:0 0 18px;}
-  .blurb-box{background:var(--panel);border-left:3px solid var(--brass);border-radius:var(--radius);padding:16px 20px;margin:20px 0 28px;font-size:14px;color:var(--parchment);line-height:1.6;font-style:italic;}
+  .synopsis-label{font-family:var(--mono);font-size:12px;color:var(--brass);letter-spacing:0.1em;text-transform:uppercase;margin:20px 0 8px;}
+  .blurb-box{background:var(--panel);border-left:3px solid var(--brass);border-radius:var(--radius);padding:16px 20px;margin:0 0 28px;font-size:16px;color:var(--parchment);line-height:1.65;font-style:italic;}
   .rating-stamp{
     flex:0 0 auto;width:120px;height:120px;border:2px solid var(--brass);border-radius:50%;
     display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-4deg);
@@ -601,7 +604,7 @@ function renderHome(){
     <div class="marquee-wrap">
       <div class="marquee-track">
         ${marqueeItems.map(r => `
-          <div class="due-card">
+          <a class="due-card" href="#/book/${slug(r.bookTitle)}">
             <img class="cover" src="${(BOOK_CONTENT[r.bookTitle] && BOOK_CONTENT[r.bookTitle].cover) || 'images/legacy-list-seal.png'}" alt="" loading="lazy">
             <div class="content">
               <div class="stamp">${'★'.repeat(Math.round(r.rating))}${'☆'.repeat(5-Math.round(r.rating))}</div>
@@ -609,7 +612,7 @@ function renderHome(){
               <p class="quote">${escapeHtml(r.review) || 'No written review.'}</p>
               <div class="who">— ${escapeHtml(r.firstName)}</div>
             </div>
-          </div>
+          </a>
         `).join('')}
       </div>
     </div>` : '<div class="empty">No reviews yet — check back once quizzes start rolling in!</div>'}
@@ -686,7 +689,7 @@ function renderBook(title){
       </div>
     </div>
 
-    ${content ? `<div class="blurb-box">${escapeHtml(content.blurb)}</div>` : ''}
+    ${content ? `<div class="synopsis-label">Synopsis</div><div class="blurb-box">${escapeHtml(content.blurb)}</div>` : ''}
 
     <div class="section-head"><h3>Reader Reviews</h3></div>
     <div class="review-list">
