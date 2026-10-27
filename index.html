@@ -499,6 +499,17 @@ const BOOK_CONTENT = {
   }
 };
 
+/* Book cover + blurb now come from the "Book Content" Google Sheet
+   (sent by the backend with each book). BOOK_CONTENT above is only a
+   backup, used if a sheet cell is blank. */
+function bookContent(title){
+  const fromSheet = (siteData && siteData.books.find(b => b.title === title)) || {};
+  const backup = BOOK_CONTENT[title] || {};
+  const cover = fromSheet.cover || backup.cover || '';
+  const blurb = fromSheet.blurb || backup.blurb || '';
+  return { cover: cover, blurb: blurb };
+}
+
 function stars(n){
   if (n === null || n === undefined) return '— no ratings yet —';
   const full = Math.round(n);
@@ -605,7 +616,7 @@ function renderHome(){
       <div class="marquee-track">
         ${marqueeItems.map(r => `
           <a class="due-card" href="#/book/${slug(r.bookTitle)}">
-            <img class="cover" src="${(BOOK_CONTENT[r.bookTitle] && BOOK_CONTENT[r.bookTitle].cover) || 'images/legacy-list-seal.png'}" alt="" loading="lazy">
+            <img class="cover" src="${escapeHtml(bookContent(r.bookTitle).cover || 'images/legacy-list-seal.png')}" alt="" loading="lazy">
             <div class="content">
               <div class="stamp">${'★'.repeat(Math.round(r.rating))}${'☆'.repeat(5-Math.round(r.rating))}</div>
               <p class="book-title">${escapeHtml(r.bookTitle)}</p>
@@ -644,9 +655,9 @@ function renderGrade(grade){
     </div>
     <div class="catalog-grid">
       ${books.map(b => {
-        const content = BOOK_CONTENT[b.title];
-        const coverHtml = content
-          ? `<img class="cover" src="${content.cover}" alt="${escapeHtml(b.title)} cover" loading="lazy">`
+        const content = bookContent(b.title);
+        const coverHtml = content.cover
+          ? `<img class="cover" src="${escapeHtml(content.cover)}" alt="${escapeHtml(b.title)} cover" loading="lazy">`
           : `<div class="cover-placeholder">Cover coming soon</div>`;
         return `
         <a class="catalog-card" href="#/book/${slug(b.title)}">
@@ -666,9 +677,9 @@ function renderBook(title){
   const app = document.getElementById('app');
   const book = siteData.books.find(b => b.title === title);
   if (!book){ app.innerHTML = '<div class="empty">Book not found.</div>'; return; }
-  const content = BOOK_CONTENT[book.title];
-  const coverHtml = content
-    ? `<img class="cover" src="${content.cover}" alt="${escapeHtml(book.title)} cover">`
+  const content = bookContent(book.title);
+  const coverHtml = content.cover
+    ? `<img class="cover" src="${escapeHtml(content.cover)}" alt="${escapeHtml(book.title)} cover">`
     : `<div class="cover-placeholder">Cover coming soon</div>`;
 
   app.innerHTML = `
@@ -689,7 +700,7 @@ function renderBook(title){
       </div>
     </div>
 
-    ${content ? `<div class="synopsis-label">Synopsis</div><div class="blurb-box">${escapeHtml(content.blurb)}</div>` : ''}
+    ${content.blurb ? `<div class="synopsis-label">Synopsis</div><div class="blurb-box">${escapeHtml(content.blurb)}</div>` : ''}
 
     <div class="section-head"><h3>Reader Reviews</h3></div>
     <div class="review-list">
