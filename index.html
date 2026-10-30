@@ -6,7 +6,7 @@
 <title>Tonkawa Literary Canon — Reading Challenge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
   /* ============ DESIGN TOKENS ============ */
   :root{
@@ -138,6 +138,59 @@
   .section-head h3{font-family:var(--display);font-size:24px;margin:0;color:var(--parchment);}
   .section-head .tag{font-family:var(--mono);font-size:11px;color:var(--slate);letter-spacing:0.1em;text-transform:uppercase;}
 
+  /* ============ BROWSE BY GRADE (homepage) ============ */
+  :root{--fell:'IM Fell English',serif;}
+  .browse-head{margin:56px 0 20px;}
+  .browse-head h3{font-family:var(--fell);font-weight:400;font-size:32px;margin:0;color:var(--parchment);}
+  .gboxes{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .gbox{min-width:0;position:relative;background:var(--panel);border:3px double var(--line);text-decoration:none;color:var(--parchment);
+        display:flex;flex-direction:column;overflow:hidden;transition:border-color .2s, transform .2s;}
+  .gbox:hover{border-color:var(--brass);transform:translateY(-2px);}
+  .gbox .gtitle{font-family:var(--fell);font-style:italic;font-size:30px;text-align:center;padding:20px 12px 2px;}
+  .fleuron{text-align:center;color:var(--brass);font-family:var(--fell);font-size:22px;line-height:1;margin:2px 0 14px;}
+  .fleuron span{display:inline-block;width:40px;height:1px;background:var(--brass-dim);vertical-align:middle;margin:0 10px;}
+  .cover-strip{overflow:hidden;position:relative;padding:4px 0 20px;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);}
+  .cover-strip .track{display:flex;gap:10px;width:max-content;animation:coverDrift linear infinite;}
+  .cover-strip.rev .track{animation-direction:reverse;}
+  .cover-strip img{width:74px;height:111px;object-fit:cover;border:1px solid var(--line);box-shadow:0 6px 14px rgba(0,0,0,.45);}
+  /* Grade boxes stay still until hovered, to keep the homepage calm */
+  .gbox .cover-strip .track{animation-play-state:paused;}
+  .gbox:hover .cover-strip .track{animation-play-state:running;}
+  @keyframes coverDrift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion: reduce){.cover-strip .track{animation:none}}
+  .hs-canon{display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--panel);border:3px double var(--line);
+            padding:34px 0;margin-top:22px;overflow:hidden;}
+  .hs-canon .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);}
+  .hs-canon h4{font-family:var(--fell);font-weight:400;font-size:46px;line-height:1.1;margin:8px 0 0;color:var(--parchment);white-space:nowrap;}
+  .hs-canon .fleuron{margin:6px 0 14px;}
+  .hs-canon p{font-size:17px;color:var(--parchment);opacity:.8;margin:0 24px 22px;}
+  .hs-canon .wall{width:100%;margin-bottom:22px;}
+  .hs-canon .wall .cover-strip{padding-bottom:10px;}
+  .hs-canon .wall .cover-strip img{width:92px;height:138px;}
+  @media (max-width:760px){.gboxes{grid-template-columns:1fr;}.hs-canon h4{white-space:normal;font-size:34px;}}
+
+  /* ============ HIGH SCHOOL CANON PAGE ============ */
+  .canon-head{background:none;border:0;padding:0;margin:20px 0 26px;}
+  .canon-tools{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:0 0 18px;}
+  .canon-search{display:flex;flex-direction:column;gap:8px;}
+  .canon-search .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);}
+  .canon-search .row{display:flex;gap:10px;}
+  .canon-search input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);color:var(--parchment);
+    font-family:var(--body);font-size:15px;padding:12px 14px;border-radius:var(--radius);}
+  .canon-search input:focus{border-color:var(--brass);outline:none;}
+  .canon-note{font-family:var(--mono);font-size:13px;color:var(--parchment);margin:4px 0 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .canon-note strong{color:var(--brass);font-weight:500;}
+  .catalog-card{position:relative;}
+  .catalog-card.read{border-color:var(--brass);box-shadow:0 0 0 1px var(--brass) inset;}
+  .catalog-card.read-before{opacity:.55;}
+  .read-tag{position:absolute;top:10px;right:10px;z-index:2;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+    background:var(--brass);color:var(--ink);padding:4px 7px;}
+  .read-tag.dim{background:var(--panel-2);color:var(--slate);border:1px solid var(--line);}
+  .b-stamp{white-space:nowrap;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);
+    border:1.5px solid var(--brass);padding:4px 8px;transform:rotate(-2deg);display:inline-block;}
+  @media (max-width:700px){.canon-tools{grid-template-columns:1fr;}}
+
   /* ============ GRADE DRAWERS ============ */
   .drawers{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;}
   .drawer{
@@ -209,6 +262,54 @@
   .grade-board-head a:hover{text-decoration:underline;}
   .grade-board .board td, .grade-board .board th{padding:8px 6px;font-size:13px;}
 
+  /* ============ LEADERBOARD (honor roll, ribbons, stamps) ============ */
+  .roll{background:var(--panel);border:1px solid var(--brass);padding:34px 28px 32px;text-align:center;}
+  .roll .seal{width:224px;height:224px;border-radius:50%;box-shadow:0 0 0 1px var(--brass-dim),0 0 60px rgba(232,96,12,.18);}
+  .roll h4{font-family:var(--display);font-size:28px;margin:22px 0 4px;color:var(--parchment);}
+  .roll .sub{font-family:var(--mono);font-size:11px;color:var(--slate);letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px;}
+  .roll .names{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;row-gap:14px;font-family:var(--display);font-size:21px;font-style:italic;max-width:860px;margin:0 auto;color:var(--parchment);}
+  .roll .names .nm{white-space:nowrap;}
+  .roll .names .sep{display:inline-flex;align-items:center;gap:5px;margin:0 18px;}
+  .roll .names .sep::before,.roll .names .sep::after{content:"";width:14px;height:1px;background:linear-gradient(90deg,transparent,var(--brass));}
+  .roll .names .sep::after{background:linear-gradient(90deg,var(--brass),transparent);}
+  .roll .names .sep i{width:7px;height:7px;background:var(--brass);transform:rotate(45deg);display:block;box-shadow:0 0 0 2px var(--panel),0 0 0 3px var(--brass-dim);}
+  .roll .names .sep.hide{visibility:hidden;}
+  .roll .count{font-family:var(--mono);font-size:12px;color:var(--slate);margin-top:20px;}
+  @media (max-width:600px){.roll .seal{width:150px;height:150px;}.roll .names{font-size:18px;}}
+
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:6px;}
+  @media (max-width:700px){.twocol{grid-template-columns:1fr;gap:0;}}
+  .closest-head{display:flex;justify-content:space-between;align-items:baseline;margin:22px 0 6px;}
+  .closest-head h5{font-family:var(--display);font-size:18px;margin:0;color:var(--parchment);}
+  .prog{display:inline-flex;gap:4px;vertical-align:middle;margin-right:10px;}
+  .prog i{width:14px;height:6px;background:var(--line);display:block;}
+  .prog i.on{background:var(--brass);}
+  .divider{border:0;border-top:1px dashed var(--line);margin:48px 0 0;}
+  .empty.small{padding:18px 0;font-size:13px;}
+
+  .board tr.met td{background:linear-gradient(90deg,rgba(232,96,12,.16),transparent 70%);}
+  .board tr.met td:first-child{box-shadow:inset 3px 0 0 var(--brass);}
+  .board .scope{font-family:var(--mono);font-size:10px;color:var(--slate);border:1px solid var(--line);padding:2px 6px;margin-left:8px;letter-spacing:.08em;}
+  .r-tab{display:inline-flex;align-items:flex-start;justify-content:center;width:20px;padding-top:3px;height:28px;font-family:var(--mono);font-size:11px;color:var(--slate);vertical-align:middle;}
+  .r-tab.t1,.r-tab.t2,.r-tab.t3{color:var(--ink);font-weight:600;clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);margin-top:-4px;}
+  .r-tab.t1{background:var(--clay);} .r-tab.t2{background:var(--brass);} .r-tab.t3{background:var(--brass-dim);}
+  .r-tab.t0{height:auto;padding-top:0;align-items:center;font-size:12px;}
+
+  .grade-boards.two-rows{grid-template-columns:repeat(8,1fr);}
+  .grade-boards.two-rows .grade-board{grid-column:span 2;}
+  .grade-boards.two-rows .grade-board:first-child{grid-column:2 / span 2;}
+  @media (max-width:900px){.grade-boards.two-rows{grid-template-columns:1fr 1fr;}.grade-boards.two-rows .grade-board,.grade-boards.two-rows .grade-board:first-child{grid-column:auto;}}
+  @media (max-width:560px){.grade-boards.two-rows{grid-template-columns:1fr;}}
+  .grade-board .b-stamp{font-size:9px;letter-spacing:.07em;padding:3px 5px;}
+  .grade-board .board td{padding:8px 4px;}
+  .grade-board .board td:first-child{width:34px;padding-left:8px;}
+  .grade-board .board td:nth-child(2){white-space:nowrap;}
+  .grade-board .board td:nth-child(3){width:1%;white-space:nowrap;text-align:right;padding-right:8px;}
+  .grade-board.full{max-width:560px;}
+  .board.alltime td:first-child,.board.alltime th:first-child{width:56px;}
+  .board.alltime td:nth-child(2),.board.alltime th:nth-child(2){width:60%;}
+  .shelf-stamp{margin:-6px 0 20px;}
+
   /* ============ MY SHELF ============ */
   .lookup{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;}
   .lookup input{
@@ -226,6 +327,12 @@
   .shelf-row .title{text-decoration:none;}
   .shelf-row .title:hover{color:var(--brass);}
   .shelf-summary{font-family:var(--mono);font-size:13px;color:var(--brass);margin-bottom:20px;}
+  .shelf-row.prior .check{border-style:dashed;color:var(--slate);}
+  .shelf-row.prior .title{color:var(--slate);text-decoration:line-through;}
+  .shelf-row .note{font-family:var(--mono);font-size:11px;color:var(--slate);margin-left:auto;text-align:right;}
+  .goal-met{font-family:var(--display);font-size:20px;color:var(--parchment);margin:-8px 0 20px;}
+  .rule-note{border:1px solid var(--line);border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;margin:0 0 24px;font-size:15px;line-height:1.5;color:var(--parchment);}
+  .rule-note strong{color:var(--brass);}
 
   .empty, .loading{color:var(--slate);font-size:14px;padding:40px 0;text-align:center;}
   .back-link{display:inline-block;margin-bottom:24px;font-family:var(--mono);font-size:12px;color:var(--slate);text-decoration:none;}
@@ -549,7 +656,13 @@ function router(){
   document.querySelectorAll('nav.site a').forEach(a => a.classList.remove('active'));
 
   if (hash === '#/' || hash === '') { renderHome(); document.querySelector('[data-route="home"]').classList.add('active'); }
-  else if (hash.startsWith('#/grade/')) renderGrade(Number(hash.split('/')[2]));
+  else if (hash === '#/high-school') renderHighSchool();
+  else if (hash.startsWith('#/grade/')) {
+    const g = Number(hash.split('/')[2]);
+    // High school no longer has grade lists; old links go to the Canon
+    if (isHsGrade(g)) { history.replaceState(null, '', '#/high-school'); renderHighSchool(); }
+    else renderGrade(g);
+  }
   else if (hash.startsWith('#/book/')) renderBook(unslug(hash.split('/')[2]));
   else if (hash.startsWith('#/leaderboard/grade/')) { renderGradeLeaderboard(Number(hash.split('/')[3])); document.querySelector('[data-route="leaderboard"]').classList.add('active'); }
   else if (hash === '#/leaderboard') { renderLeaderboard(); document.querySelector('[data-route="leaderboard"]').classList.add('active'); }
@@ -557,6 +670,127 @@ function router(){
   else renderHome();
 
   window.scrollTo(0,0);
+}
+
+/* ============ BROWSE HELPERS ============ */
+const MS_GRADES_LIST = [6,7,8];
+const MS_GRADES = MS_GRADES_LIST;
+const FLEURON = '<div class="fleuron"><span></span>❦<span></span></div>';
+// Unique cover images for the books matching a filter (in sheet order)
+function coversFor(filter){
+  const seen = new Set();
+  return siteData.books.filter(filter).map(b => bookContent(b.title).cover).filter(c => c && !seen.has(c) && seen.add(c));
+}
+// A slowly drifting row of covers (doubled for a seamless loop)
+function coverStrip(covers, reverse, seconds){
+  if (!covers.length) return '';
+  const imgs = covers.concat(covers).map(c => `<img src="${escapeHtml(c)}" alt="" loading="lazy">`).join('');
+  return `<div class="cover-strip${reverse ? ' rev' : ''}"><div class="track" style="animation-duration:${seconds}s">${imgs}</div></div>`;
+}
+
+/* ============ HIGH SCHOOL CANON PAGE ============ */
+let canonReader = null;   // the student looked up on this page (kept while browsing)
+
+// Shared lookup: matches a typed name, first name, or school email (hashed)
+async function findStudent(q){
+  q = q.trim().toLowerCase();
+  if (!q) return null;
+  const qHash = await sha256Hex(q);
+  return siteData.students.find(s =>
+    s.emailHash === qHash || s.name.toLowerCase() === q || s.name.toLowerCase().split(/\s+/)[0] === q
+  ) || null;
+}
+
+function canonBooks(){
+  const key = t => t.replace(/^(the|a|an)\s+/i, '');
+  return siteData.books.filter(b => isHsGrade(b.grade)).slice().sort((a,b) => key(a.title).localeCompare(key(b.title)));
+}
+
+function renderHighSchool(){
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <a class="back-link" href="#/">&larr; Back to shelves</a>
+    <div class="hs-canon canon-head">
+      <div class="eyebrow">Grades 9–12</div>
+      <h4>The High School Canon</h4>
+      ${FLEURON}
+      <p>Some of the greatest books ever written. Pick any five each year and build a shelf that's entirely your own.</p>
+    </div>
+    <div class="canon-tools">
+      <label class="canon-search">
+        <span class="lbl">Search by book</span>
+        <input id="canon-q" type="search" placeholder="Title, author, or topic…" autocomplete="off">
+      </label>
+      <form class="canon-search" id="canon-me">
+        <span class="lbl">Find your shelf</span>
+        <span class="row">
+          <input id="canon-who" type="text" placeholder="Your name or school email…" autocomplete="off">
+          <button class="btn solid" type="submit">Find</button>
+        </span>
+      </form>
+    </div>
+    <div id="canon-status"></div>
+    <div class="catalog-grid" id="canon-grid"></div>
+  `;
+  document.getElementById('canon-q').addEventListener('input', drawCanon);
+  document.getElementById('canon-me').addEventListener('submit', async e => {
+    e.preventDefault();
+    const q = document.getElementById('canon-who').value;
+    canonReader = q.trim() ? await findStudent(q) : null;
+    if (q.trim() && !canonReader){
+      document.getElementById('canon-status').innerHTML = '<div class="canon-note">No completed quizzes found under that name or email yet. Check the spelling, or take a quiz first!</div>';
+      drawCanon(true);
+      return;
+    }
+    drawCanon();
+  });
+  if (canonReader) document.getElementById('canon-who').value = canonReader.name;
+  drawCanon();
+}
+
+function drawCanon(keepStatus){
+  const q = (document.getElementById('canon-q').value || '').trim().toLowerCase();
+  const reader = canonReader;
+  const hs = reader && reader.highSchool;
+  const thisYear = new Set(hs ? hs.thisYearTitles : []);
+  const earlier = {};
+  if (hs) hs.earlierTitles.forEach(e => { earlier[e.title] = e.schoolYear; });
+
+  const books = canonBooks().filter(b => {
+    if (!q) return true;
+    const hay = (b.title + ' ' + b.author + ' ' + (bookContent(b.title).blurb || '')).toLowerCase();
+    return q.split(/\s+/).every(w => hay.includes(w));
+  });
+
+  if (keepStatus !== true){
+    const status = document.getElementById('canon-status');
+    if (reader && hs){
+      status.innerHTML = `<div class="canon-note"><strong>${escapeHtml(reader.name)}</strong>: ${hs.goalMet
+        ? `<span class="b-stamp">Legacy Secured · ${escapeHtml(hs.schoolYear.replace(/^20/, ''))}</span> ${hs.count} books read this school year`
+        : `${hs.count} of ${hs.goal} books read for the ${escapeHtml(hs.schoolYear)} school year`}</div>`;
+    } else {
+      status.innerHTML = '';
+    }
+  }
+
+  const grid = document.getElementById('canon-grid');
+  if (!books.length){ grid.innerHTML = '<div class="empty" style="grid-column:1/-1">No books match that search.</div>'; return; }
+  grid.innerHTML = books.map(b => {
+    const content = bookContent(b.title);
+    const done = thisYear.has(b.title);
+    const prior = !done && earlier[b.title];
+    const coverHtml = content.cover
+      ? `<img class="cover" src="${escapeHtml(content.cover)}" alt="${escapeHtml(b.title)} cover" loading="lazy">`
+      : `<div class="cover-placeholder">Cover coming soon</div>`;
+    return `
+    <a class="catalog-card${done ? ' read' : ''}${prior ? ' read-before' : ''}" href="#/book/${slug(b.title)}">
+      ${done ? '<span class="read-tag">✓ Read this year</span>' : prior ? `<span class="read-tag dim">Read in ${escapeHtml(prior)}</span>` : ''}
+      ${coverHtml}
+      <span class="title">${escapeHtml(b.title)}</span>
+      <span class="author">by ${escapeHtml(b.author)}</span>
+      <span class="stars">${stars(b.avgRating)}</span>
+    </a>`;
+  }).join('');
 }
 
 /* ============ HOME ============ */
@@ -594,18 +828,24 @@ function renderHome(){
       </div>
     </section>
 
-    <div class="section-head">
-      <h3>Browse by grade</h3>
-      <span class="tag">${siteData.totalBooks} books · 7 shelves</span>
-    </div>
-    <div class="drawers">
-      ${GRADES.map(g => `
-        <a class="drawer" href="#/grade/${g}">
-          <span class="num">${String(g).padStart(2,'0')}</span>
-          <span class="label">Grade ${g}</span>
+    <div class="browse-head"><h3>Browse by Grade</h3></div>
+    <div class="gboxes">
+      ${MS_GRADES.map((g, i) => `
+        <a class="gbox" href="#/grade/${g}">
+          <div class="gtitle">Grade ${g}</div>
+          ${FLEURON}
+          ${coverStrip(coversFor(b => b.grade === g), i === 1, 34 + g * 2)}
         </a>
       `).join('')}
     </div>
+    <a class="hs-canon" href="#/high-school" style="text-decoration:none;">
+      <div class="eyebrow">Grades 9–12</div>
+      <h4>The High School Canon</h4>
+      ${FLEURON}
+      <p>Some of the greatest books ever written. Pick any five each year and build a shelf that's entirely your own.</p>
+      <div class="wall">${coverStrip(coversFor(b => isHsGrade(b.grade)), false, 120)}</div>
+      <span class="btn solid">Browse the Canon</span>
+    </a>
 
     <div class="section-head">
       <h3>Book Reviews</h3>
@@ -613,7 +853,7 @@ function renderHome(){
     </div>
     ${marqueeItems.length ? `
     <div class="marquee-wrap">
-      <div class="marquee-track">
+      <div class="marquee-track" style="animation-duration:${Math.max(55, Math.round(shuffled.length * 3.5))}s">
         ${marqueeItems.map(r => `
           <a class="due-card" href="#/book/${slug(r.bookTitle)}">
             <img class="cover" src="${escapeHtml(bookContent(r.bookTitle).cover || 'images/legacy-list-seal.png')}" alt="" loading="lazy">
@@ -683,7 +923,9 @@ function renderBook(title){
     : `<div class="cover-placeholder">Cover coming soon</div>`;
 
   app.innerHTML = `
-    <a class="back-link" href="#/grade/${book.grade}">&larr; Back to Grade ${book.grade}</a>
+    ${isHsGrade(book.grade)
+      ? `<a class="back-link" href="#/high-school">&larr; Back to the High School Canon</a>`
+      : `<a class="back-link" href="#/grade/${book.grade}">&larr; Back to Grade ${book.grade}</a>`}
     <div class="book-head">
       ${coverHtml}
       <div class="info">
@@ -717,6 +959,28 @@ function renderBook(title){
   `;
 }
 
+/* ============ CHALLENGE RULES ============ */
+// High school: any 5 books from the 9–12 canon, 5 NEW books each school year.
+// Middle school: 5 books from your own grade's shelf each school year.
+// (If the backend hasn't been updated yet, everything falls back to
+// counting every completion, so the site never breaks.)
+function hsRulesOn(){ return !!(siteData && siteData.hsGoal); }
+function hsGrades(){ return (siteData && siteData.hsGrades) || [9,10,11,12]; }
+function isHsGrade(g){ return hsGrades().includes(g); }
+function isMsGrade(g){ return MS_GRADES.includes(g); }
+function inHs(s){ return (s.gradeTags || []).some(isHsGrade); }
+function inMs(s){ return (s.gradeTags || []).some(isMsGrade); }
+// This year's progress for a student in a band ('HS' or 'MS')
+function progressFor(s, band){
+  if (!hsRulesOn()) {
+    const n = s.completedCount || 0;
+    return { count: n, goal: 5, goalMet: n >= 5, reachedAt: 0, thisYearTitles: s.completedTitles || [] };
+  }
+  const p = band === 'HS' ? s.highSchool : s.middleSchool;
+  return p || { count: 0, goal: band === 'HS' ? siteData.hsGoal : (siteData.msGoal || 5), goalMet: false, reachedAt: 0, thisYearTitles: [] };
+}
+const byProgress = band => (a, b) => (progressFor(b, band).count - progressFor(a, band).count) || (progressFor(a, band).reachedAt - progressFor(b, band).reachedAt);
+
 /* ============ LEADERBOARD ============ */
 // Helper: display name as "First L." to match the site's existing convention
 function displayName(name){
@@ -724,92 +988,143 @@ function displayName(name){
   const last = parts[1] ? parts[1].charAt(0) + '.' : '';
   return `${escapeHtml(parts[0])} ${escapeHtml(last)}`.trim();
 }
+const STAMP = '<span class="b-stamp">Legacy Secured</span>';
+function ribbon(rank){ return `<span class="r-tab t${rank <= 3 ? rank : 0}">${rank}</span>`; }
+function gradeLabel(s){
+  if (s.isTeacher) return 'Teacher';
+  const g = (s.gradeTags || [])[0];
+  return g ? 'GR ' + g : '';
+}
 
-// Helper: unique-by-name+completedCount students eligible for a set of grades
-// (a teacher tagged with grades in both bands only counts once per band)
-function studentsForGrades(gradeList){
-  const seen = new Set();
+// Everyone (both levels) who has met this year's goal, in the order they finished
+function honorRollStudents(){
   const out = [];
   siteData.students.forEach(s => {
-    if (!s.gradeTags || !s.gradeTags.some(g => gradeList.includes(g))) return;
-    const key = s.name + '|' + s.completedCount;
-    if (seen.has(key)) return;
-    seen.add(key);
-    out.push(s);
+    const times = [];
+    if (inHs(s) && progressFor(s, 'HS').goalMet) times.push(progressFor(s, 'HS').reachedAt);
+    if (inMs(s) && progressFor(s, 'MS').goalMet) times.push(progressFor(s, 'MS').reachedAt);
+    if (times.length) out.push({ s, at: Math.min.apply(null, times) });
   });
-  return out.sort((a,b) => b.completedCount - a.completedCount);
+  return out.sort((a, b) => a.at - b.at).map(x => x.s);
+}
+function closestToFive(band){
+  return siteData.students
+    .filter(s => (band === 'HS' ? inHs(s) : inMs(s)))
+    .filter(s => { const p = progressFor(s, band); return p.count > 0 && !p.goalMet; })
+    .sort(byProgress(band)).slice(0, 3);
+}
+function gradeLeaders(grade){
+  const band = isHsGrade(grade) ? 'HS' : 'MS';
+  return siteData.students
+    .filter(s => (s.gradeTags || []).includes(grade) && progressFor(s, band).count > 0)
+    .sort(byProgress(band));
+}
+function allTimeLeaders(){
+  return siteData.students.filter(s => s.completedCount > 0).slice()
+    .sort((a, b) => (b.completedCount - a.completedCount) || ((a.allTimeReachedAt || 0) - (b.allTimeReachedAt || 0)))
+    .slice(0, 10);
 }
 
-function boardRows(students, medals){
-  return students.map((s,i) => `
-    <tr>
-      <td class="rank">${i < 3 ? `<span class="medal">${medals[i]}</span>` : '#' + (i+1)}</td>
+function gradeRows(students, grade){
+  const band = isHsGrade(grade) ? 'HS' : 'MS';
+  return students.map((s, i) => {
+    const p = progressFor(s, band);
+    return `<tr${p.goalMet ? ' class="met"' : ''}>
+      <td>${ribbon(i + 1)}</td>
       <td>${displayName(s.name)}</td>
-      <td>${s.completedCount} / ${siteData.totalBooks}</td>
-    </tr>
-  `).join('');
+      <td>${p.goalMet ? STAMP : `${p.count} / ${p.goal}`}</td>
+    </tr>`;
+  }).join('');
 }
+function progressBar(p){
+  let segs = '';
+  for (let i = 0; i < p.goal; i++) segs += `<i${i < p.count ? ' class="on"' : ''}></i>`;
+  return `<span class="prog">${segs}</span>${p.count} / ${p.goal}`;
+}
+function closestTable(band){
+  const list = closestToFive(band);
+  if (!list.length) return '<div class="empty small">No one in progress yet.</div>';
+  return `<table class="board"><thead><tr><th>Reader</th><th>Gr</th><th>Progress</th></tr></thead><tbody>
+    ${list.map(s => `<tr><td>${displayName(s.name)}</td><td>${s.isTeacher ? '—' : ((s.gradeTags || [])[0] || '')}</td><td>${progressBar(progressFor(s, band))}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+// Hide name dividers that would dangle at the end of a wrapped line
+function tidyHonorSeps(){
+  document.querySelectorAll('.roll .names').forEach(box => {
+    const seps = [...box.querySelectorAll('.sep')];
+    seps.forEach(x => x.classList.remove('hide'));
+    seps.forEach(x => {
+      const prev = x.previousElementSibling, next = x.nextElementSibling;
+      if (!prev || !next || prev.offsetTop !== next.offsetTop) x.classList.add('hide');
+    });
+  });
+}
+window.addEventListener('resize', tidyHonorSeps);
 
 function renderLeaderboard(){
   const app = document.getElementById('app');
-  const medals = ['🥇','🥈','🥉'];
-  const MS_GRADES = [6,7,8], HS_GRADES = [9,10,11,12];
-
-  const msTop = studentsForGrades(MS_GRADES).slice(0, 3);
-  const hsTop = studentsForGrades(HS_GRADES).slice(0, 3);
-
-  const bandBoard = (title, students) => `
-    <div class="section-head"><h3>${title}</h3><span class="tag">Top 3 overall</span></div>
-    ${students.length ? `
-    <table class="board">
-      <thead><tr><th>Rank</th><th>Reader</th><th>Books Completed</th></tr></thead>
-      <tbody>${boardRows(students, medals)}</tbody>
-    </table>` : '<div class="empty">No completions logged yet.</div>'}
-  `;
-
-  const gradeBoard = (grade) => {
-    const students = studentsForGrades([grade]).slice(0, 3);
-    return `
-      <div class="grade-board">
-        <div class="grade-board-head">
-          <h4>Grade ${grade}</h4>
-          <a href="#/leaderboard/grade/${grade}">View full leaderboard &rarr;</a>
-        </div>
-        ${students.length ? `
-        <table class="board">
-          <thead><tr><th>Rank</th><th>Reader</th><th>Books</th></tr></thead>
-          <tbody>${boardRows(students, medals)}</tbody>
-        </table>` : '<div class="empty">No completions logged yet.</div>'}
-      </div>
-    `;
-  };
+  const year = siteData.currentSchoolYear || '';
+  const roll = honorRollStudents();
+  const sep = '<span class="sep"><i></i></span>';
 
   app.innerHTML = `
-    ${bandBoard('🏆 High School Leaders', hsTop)}
-    ${bandBoard('🏆 Middle School Leaders', msTop)}
-
-    <div class="section-head"><h3>By Grade</h3><span class="tag">Top 3 per grade</span></div>
-    <div class="grade-boards">
-      ${GRADES.map(g => gradeBoard(g)).join('')}
+    <div class="section-head"><h3>Honor Roll</h3><span class="tag">${escapeHtml(year)} · every reader who's met the goal</span></div>
+    <div class="roll">
+      <img class="seal" src="images/legacy-list-seal.png" alt="Legacy List seal">
+      <h4>The ${escapeHtml(year)} Honor Roll</h4>
+      <div class="sub">Five books read · grades 6–12</div>
+      ${roll.length
+        ? `<div class="names">${roll.map(s => `<span class="nm">${displayName(s.name)}</span>`).join(sep)}</div>
+           <div class="count">${roll.length} reader${roll.length === 1 ? '' : 's'} so far</div>`
+        : `<div class="count">No one yet. Be the first to read five!</div>`}
     </div>
+
+    <div class="twocol">
+      <div><div class="closest-head"><h5>Closest to Five · High School</h5></div>${closestTable('HS')}</div>
+      <div><div class="closest-head"><h5>Closest to Five · Middle School</h5></div>${closestTable('MS')}</div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-head"><h3>Leaders by Grade</h3><span class="tag">Top 5 per grade · this year</span></div>
+    <div class="grade-boards two-rows">
+      ${GRADES.map(g => {
+        const top = gradeLeaders(g).slice(0, 5);
+        return `
+        <div class="grade-board">
+          <div class="grade-board-head"><h4>Grade ${g}</h4><a href="#/leaderboard/grade/${g}">Full list &rarr;</a></div>
+          ${top.length ? `<table class="board"><tbody>${gradeRows(top, g)}</tbody></table>` : '<div class="empty small">No readers yet.</div>'}
+        </div>`;
+      }).join('')}
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-head"><h3>All-Time Leaders</h3><span class="tag">Top 10 · every book ever finished · all grades</span></div>
+    ${(() => {
+      const list = allTimeLeaders();
+      if (!list.length) return '<div class="empty">No completions logged yet.</div>';
+      return `<table class="board alltime"><thead><tr><th></th><th>Reader</th><th>Total Books</th></tr></thead><tbody>
+        ${list.map((s, i) => `<tr><td>${ribbon(i + 1)}</td><td>${displayName(s.name)} ${gradeLabel(s) ? `<span class="scope">${gradeLabel(s)}</span>` : ''}</td><td>${s.completedCount}</td></tr>`).join('')}
+      </tbody></table>`;
+    })()}
   `;
+  tidyHonorSeps();
 }
 
 function renderGradeLeaderboard(grade){
   const app = document.getElementById('app');
-  const medals = ['🥇','🥈','🥉'];
-  const students = studentsForGrades([grade]);
+  const students = gradeLeaders(grade);
   app.innerHTML = `
     <a class="back-link" href="#/leaderboard">&larr; Back to leaderboard</a>
     <div class="section-head">
-      <h3>Grade ${grade} — Full Leaderboard</h3>
-      <span class="tag">Ranked by books completed</span>
+      <h3>Grade ${grade} · Full Leaderboard</h3>
+      <span class="tag">${escapeHtml(siteData.currentSchoolYear || '')} school year</span>
     </div>
-    ${students.length ? `
-    <table class="board">
-      <thead><tr><th>Rank</th><th>Reader</th><th>Books Completed</th></tr></thead>
-      <tbody>${boardRows(students, medals)}</tbody>
-    </table>` : '<div class="empty">No completions logged yet for this grade.</div>'}
+    ${students.length
+      ? `<div class="grade-board full"><table class="board"><tbody>${gradeRows(students, grade)}</tbody></table></div>`
+      : '<div class="empty">No readers logged yet for this grade.</div>'}
   `;
 }
 
@@ -838,10 +1153,7 @@ async function lookupShelf(){
   const results = document.getElementById('shelf-results');
   if (!q){ results.innerHTML = '<div class="empty">Type your name or email first.</div>'; return; }
 
-  const qHash = await sha256Hex(q);
-  const student = siteData.students.find(s =>
-    s.emailHash === qHash || s.name.toLowerCase() === q || s.name.toLowerCase().split(/\s+/)[0] === q
-  );
+  const student = await findStudent(q);
 
   if (!student){
     results.innerHTML = '<div class="empty">No completed quizzes found under that name/email yet. Double-check spelling, or take a quiz first!</div>';
@@ -849,20 +1161,60 @@ async function lookupShelf(){
   }
 
   const completedSet = new Set(student.completedTitles);
-  let html = `<div class="shelf-summary">${escapeHtml(student.name)} has completed ${student.completedCount} of ${siteData.totalBooks} books</div>`;
+  const showHs = inHs(student);
+  const showMs = inMs(student) || !showHs;
+  let html = '';
 
-  GRADES.forEach(g => {
-    const books = siteData.books.filter(b => b.grade === g);
-    html += `<div class="shelf-grade"><h4>Grade ${g}</h4>`;
-    books.forEach(b => {
-      const done = completedSet.has(b.title);
-      html += `<div class="shelf-row ${done ? 'done' : ''}">
-        <span class="check">${done ? '✓' : ''}</span>
+  if (showHs){
+    const hs = progressFor(student, 'HS');
+    const thisYear = new Set(hs.thisYearTitles);
+    const earlier = {};
+    (hs.earlierTitles || []).forEach(e => { earlier[e.title] = e.schoolYear; });
+    html += `<div class="shelf-summary">${escapeHtml(student.name)} · ${hs.goalMet
+      ? `${hs.count} high school books read this school year`
+      : `${hs.count} of ${hs.goal} high school books read for the ${escapeHtml(hs.schoolYear || '')} school year`}</div>`;
+    if (hs.goalMet) html += `<div class="shelf-stamp">${STAMP}</div>`;
+    html += `<div class="shelf-grade"><h4>The High School Canon</h4>`;
+    canonBooks().forEach(b => {
+      const done = thisYear.has(b.title);
+      const prior = !done && earlier[b.title];
+      html += `<div class="shelf-row ${done ? 'done' : ''} ${prior ? 'prior' : ''}">
+        <span class="check">${done ? '✓' : prior ? '–' : ''}</span>
         <a class="title" href="#/book/${slug(b.title)}">${escapeHtml(b.title)}</a>
+        ${prior ? `<span class="note">Read in ${escapeHtml(prior)}</span>` : ''}
       </div>`;
     });
     html += `</div>`;
-  });
+  }
+
+  if (showMs){
+    const ms = progressFor(student, 'MS');
+    const shelves = (student.gradeTags || []).filter(isMsGrade);
+    const thisYear = new Set(ms.thisYearTitles);
+    if (showHs) html += `<div class="section-head"><h3>Middle School</h3></div>`;
+    if (shelves.length){
+      html += `<div class="shelf-summary">${escapeHtml(student.name)} · ${ms.goalMet
+        ? `${ms.count} books read from the Grade ${shelves.join(' & ')} shelf this school year`
+        : `${ms.count} of ${ms.goal} books read from the Grade ${shelves.join(' & ')} shelf this school year`}</div>`;
+      if (ms.goalMet) html += `<div class="shelf-stamp">${STAMP}</div>`;
+    }
+    // Their own shelf first, then the other middle school shelves
+    const order = shelves.concat(MS_GRADES.filter(g => !shelves.includes(g)));
+    order.forEach(g => {
+      const books = siteData.books.filter(b => b.grade === g);
+      if (!books.length) return;
+      const own = shelves.includes(g);
+      html += `<div class="shelf-grade"><h4>Grade ${g}${own ? ' · your shelf' : ''}</h4>`;
+      books.forEach(b => {
+        const done = own ? thisYear.has(b.title) : completedSet.has(b.title);
+        html += `<div class="shelf-row ${done ? 'done' : ''}">
+          <span class="check">${done ? '✓' : ''}</span>
+          <a class="title" href="#/book/${slug(b.title)}">${escapeHtml(b.title)}</a>
+        </div>`;
+      });
+      html += `</div>`;
+    });
+  }
 
   results.innerHTML = html;
 }
