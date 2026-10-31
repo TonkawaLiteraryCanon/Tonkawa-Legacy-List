@@ -383,7 +383,7 @@ const HERO_COVERS = [
   'every-falling-star.png','fahrenheit-451.png','frankenstein.png','giver.png','graveyard-book.png',
   'harry-potter.png','hobbit.png','holes.png','house-of-the-scorpion.png','huckleberry-finn.png',
   'hunger-games.png','jane-eyre.png','lightning-thief.png','lion-witch-wardrobe.png','lord-of-the-flies.png',
-  'lord-of-the-rings.png','never-let-me-go.png','night.png','number-the-stars.png','outsiders.png',
+  'lord-of-the-rings.png','night.png','number-the-stars.png','outsiders.png',
   'pride-and-prejudice.png','red-fern-grows.png','scythe.png','tale-of-two-cities.png','the-road.png',
   'to-kill-a-mockingbird.png','treasure-island.png','tress.png','unbroken.png','until-we-meet-again.png',
   'wager.png','watership-down.png','wrinkle-in-time.png'
@@ -804,11 +804,13 @@ function renderHome(){
 
   // Split all 46 covers round-robin into 3 rows, each doubled for a seamless scroll loop
   const heroRows = [[],[],[]];
-  HERO_COVERS.forEach((file, i) => heroRows[i % 3].push(file));
+  // Every cover in the sheet (falls back to the built-in list)
+  const heroCovers = coversFor(() => true);
+  (heroCovers.length ? heroCovers : HERO_COVERS.map(f => 'images/' + f)).forEach((src, i) => heroRows[i % 3].push(src));
   const rowDurations = [42, 52, 36];
   const rowHeroHtml = heroRows.map((row, i) => `
     <div class="row${i === 1 ? ' reverse' : ''}" style="animation-duration:${rowDurations[i]}s;">
-      ${row.concat(row).map(file => `<img src="images/${file}" alt="" loading="lazy">`).join('')}
+      ${row.concat(row).map(src => `<img src="${escapeHtml(src)}" alt="" loading="lazy">`).join('')}
     </div>
   `).join('');
 
@@ -929,7 +931,7 @@ function renderBook(title){
     <div class="book-head">
       ${coverHtml}
       <div class="info">
-        <div class="call-no">GRADE ${book.grade} · TONKAWA LITERARY CANON</div>
+        <div class="call-no">${isHsGrade(book.grade) ? 'HIGH SCHOOL CANON' : 'GRADE ' + book.grade} · TONKAWA LITERARY CANON</div>
         <h2>${escapeHtml(book.title)}</h2>
         <p class="author">by ${escapeHtml(book.author)}</p>
         ${book.formUrl
@@ -966,7 +968,7 @@ function renderBook(title){
 // counting every completion, so the site never breaks.)
 function hsRulesOn(){ return !!(siteData && siteData.hsGoal); }
 function hsGrades(){ return (siteData && siteData.hsGrades) || [9,10,11,12]; }
-function isHsGrade(g){ return hsGrades().includes(g); }
+function isHsGrade(g){ return g === 'HS' || hsGrades().includes(g); }
 function isMsGrade(g){ return MS_GRADES.includes(g); }
 function inHs(s){ return (s.gradeTags || []).some(isHsGrade); }
 function inMs(s){ return (s.gradeTags || []).some(isMsGrade); }
